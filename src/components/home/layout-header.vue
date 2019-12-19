@@ -9,17 +9,19 @@
      <el-col :span="4" class="right">
          <!-- justify="end"向结尾对齐 -->
          <el-row type="flex" justify="end" align="middle">
-             <!-- 下拉菜单 -->
-              <el-dropdown trigger="click">
                 <!-- 头像 -->
                 <img :src="userInfo.photo ? userInfo.photo : defaultImg" alt="">
-                <span style="margin-left:5px;">{{userInfo.name}}</span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>个人信息</el-dropdown-item>
-                  <el-dropdown-item>git地址</el-dropdown-item>
-                  <el-dropdown-item>退出</el-dropdown-item>
-                </el-dropdown-menu>
+             <!-- 下拉菜单 -->
+             <el-dropdown>
+                  <el-dropdown @command="handle">
+                  <span style="margin-left:5px;">{{userInfo.name}}</span>
+                  <el-dropdown-menu slot="dropdown">
+                       <el-dropdown-item command='info'>个人信息</el-dropdown-item>
+                       <el-dropdown-item command='git'>git地址</el-dropdown-item>
+                       <el-dropdown-item command='logout'>退出</el-dropdown-item>
+                  </el-dropdown-menu>
               </el-dropdown>
+             </el-dropdown>
          </el-row>
      </el-col>
    </el-row>
@@ -44,9 +46,20 @@ export default {
         Authorization: `Bearer ${token}`
       }
     }).then(res => {
-      console.log(res)
+    //   console.log(res)
       this.userInfo = res.data.data// 获取到用户的个人信息
     })
+  },
+  methods: {
+    handle (command) {
+      alert(command)
+      if (command === 'logout') {
+        // 删除令牌
+        window.localStorage.removeItem('user-token')
+        // 退出到登录页
+        this.$router.push('/login')
+      }
+    }
   }
 }
 
