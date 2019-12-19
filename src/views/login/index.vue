@@ -65,7 +65,8 @@ export default {
       // 获取表单控件--通过$refs
       this.$refs.myForm.validate(function (value) {
         if (value) {
-          alert('验证通过')
+          // alert('验证通过')
+          // 调用接口
         } else {
           alert('请输入正确的信息')
         }
