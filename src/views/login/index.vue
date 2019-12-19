@@ -73,10 +73,15 @@ export default {
             data: this.loginForm// 请求携带的参数
           }).then(res => { // 登录成功进入then
             // console.log(res)
-            window.localStorage.setItem('user-token', res.data.data.token)// 存储token令牌
-          }).catch(error => {
+            window.localStorage.setItem('user-token', res.data.data.token)// 通过localStorage存储token令牌
+            // 登录成功跳转页面
+            this.$router.push('/home')// 通过代码进行页面跳转
+          }).catch(() => {
             // 失败进入catch
-            alert(error)
+            this.$message({
+              message: '你的手机号或者验证码不正确',
+              type: 'warning'
+            })
           })
         }
       })
