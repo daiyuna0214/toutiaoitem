@@ -12,8 +12,8 @@
              <!-- 下拉菜单 -->
               <el-dropdown trigger="click">
                 <!-- 头像 -->
-                <img src="../../assets/img/avatar.jpg" alt="">
-                <span style="margin-left:5px;">维纳斯</span>
+                <img :src="userInfo.photo ? userInfo.photo : defaultImg" alt="">
+                <span style="margin-left:5px;">{{userInfo.name}}</span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>个人信息</el-dropdown-item>
                   <el-dropdown-item>git地址</el-dropdown-item>
@@ -27,8 +27,29 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      userInfo: {},
+      defaultImg: require('../../assets/img/avatar.jpg')
+    }
+  },
+  // 页面创建完成，获取用户个人信息
+  created () {
+    // 获取令牌
+    let token = localStorage.getItem('user-token')
+    this.$axios({
+      url: '/user/profile',
+      method: 'get',
+      headers: {// headers参数
+        Authorization: `Bearer ${token}`
+      }
+    }).then(res => {
+      console.log(res)
+      this.userInfo = res.data.data// 获取到用户的个人信息
+    })
+  }
 }
+
 </script>
 
 <style lang='less' scoped>
