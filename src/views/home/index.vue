@@ -3,10 +3,12 @@
     <el-container>
       <!-- 左右布局 -->
         <el-aside width="200px">
+          <!-- 使用layout-aside组件 -->
           <layout-aside></layout-aside>
         </el-aside>
         <el-container>
              <el-header>
+               <!-- 使用layout-header组件 -->
                <layout-header></layout-header>
              </el-header>
              <el-main>Main</el-main>
@@ -16,12 +18,8 @@
 </template>
 
 <script>
-import layoutAside from '../../components/home/layout-aside'// 引入layout-aside子组件
-import layoutHeader from '../../components/home/layout-header'// 引入layout-header子组件
 export default {
   components: {
-    'layout-aside': layoutAside, // 注册子组件
-    'layout-header': layoutHeader
   }
 }
 </script>
