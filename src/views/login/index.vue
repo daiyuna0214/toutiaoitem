@@ -63,12 +63,21 @@ export default {
     // 自定义表单验证，当点击登录时进行验证
     submitForm () {
       // 获取表单控件--通过$refs
-      this.$refs.myForm.validate(function (value) {
+      this.$refs.myForm.validate((value) => {
         if (value) {
           // alert('验证通过')
           // 调用接口
-        } else {
-          alert('请输入正确的信息')
+          this.$axios({
+            url: '/authorizations', // 接口地址
+            method: 'post', // 请求类型
+            data: this.loginForm// 请求携带的参数
+          }).then(res => { // 登录成功进入then
+            // console.log(res)
+            window.localStorage.setItem('user-token', res.data.data.token)// 存储token令牌
+          }).catch(error => {
+            // 失败进入catch
+            alert(error)
+          })
         }
       })
     }
