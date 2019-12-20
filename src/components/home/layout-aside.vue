@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-aside">
+  <div class="layout-aside" style="width:199px;min-height:100vh">
       <div class="title">
           <img src="../../assets/img/logo_admin.png" alt="">
       </div>
@@ -43,8 +43,6 @@ export default {
 <style lang='less' scoped>
 .layout-aside{
     background-color: #353b4e;
-    width: 200px;
-    height:100vh;
     overflow: hidden;
     .title{
         background-color:  #2e2f32;
