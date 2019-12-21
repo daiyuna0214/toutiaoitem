@@ -19,6 +19,9 @@ const routes = [{
   children: [{
     path: '', // 二级路由path什么都不写，作为默认显示
     component: Home2
+  }, {
+    path: '/home/comment', // 评论列表做按需加载
+    component: () => import('../views/comment')
   }]
 }
   // {
