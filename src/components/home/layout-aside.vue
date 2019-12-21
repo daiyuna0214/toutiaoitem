@@ -1,10 +1,10 @@
 <template>
-  <div class="layout-aside" style="width:199px;min-height:100vh">
+  <div class="layout-aside" style="width:201px;min-height:100vh">
       <div class="title">
           <img src="../../assets/img/logo_admin.png" alt="">
       </div>
       <!-- elementUI中使用router开启路由模式 -->
-      <el-menu router style="width:200px" background-color="#353b4e" text-color="#adafb5" active-text-color="#ffd04b">
+      <el-menu router style="width:202px" background-color="#353b4e" text-color="#adafb5" active-text-color="#ffd04b">
          <!-- index作为path跳转地址，相当于之前router-link里面的to属性 -->
          <el-menu-item index='/home'>
            <span slot="title">首页</span>
