@@ -37,17 +37,12 @@ export default {
   },
   // 页面创建完成，获取用户个人信息
   created () {
-    // 获取令牌
-    let token = localStorage.getItem('user-token')
+    // axios默认请求方式为get
     this.$axios({
-      url: '/user/profile',
-      method: 'get',
-      headers: {// headers参数
-        Authorization: `Bearer ${token}`
-      }
+      url: '/user/profile'
     }).then(res => {
     //   console.log(res)
-      this.userInfo = res.data.data// 获取到用户的个人信息
+      this.userInfo = res.data// 获取到用户的个人信息
     })
   },
   methods: {
