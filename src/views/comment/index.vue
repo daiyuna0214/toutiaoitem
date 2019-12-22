@@ -1,7 +1,7 @@
 <template>
   <div>
       <!-- 卡片组件 -->
-      <el-card>
+      <el-card  v-loading="loading">
           <!-- 使用面包屑 -->
           <!-- 因为每一条评论的下面都有一条线，所以使用wl-card的具名插槽header，把卡片的具名插槽给面包屑 -->
           <bread-crumb slot="header">
@@ -47,11 +47,14 @@ export default {
         currentPage: 1, // 定义默认当前页
         total: 0, // 定义总页数默认值
         pageSize: 10// 定义每页默认显示数据的条数
-      }
+      },
+      loading: false// 加载状态默认false
     }
   },
   methods: {
     getMessage () {
+      // 请求成功之前加载，设为true
+      this.loading = true
       // axios默认是get请求
       this.$axios({
         url: '/articles',
@@ -60,7 +63,9 @@ export default {
         // console.log(res)
         // 把获取到的信息赋值给list
         this.list = res.data.results
-        this.page.total = res.data.total_count// 获取文章总条数
+        this.page.total = res.data.total_count// 获取文章总条数//
+        // 请求成功关闭加载，设为false
+        this.loading = false
       })
     },
     // 定义一个布尔值转化的方法
