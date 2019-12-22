@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-aside" style="width:201px;min-height:100vh">
+  <div class="layout-aside" style="width:201px;height:100%">
       <div class="title">
           <img src="../../assets/img/logo_admin.png" alt="">
       </div>

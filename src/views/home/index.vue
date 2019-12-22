@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <!-- 左右布局 -->
-        <el-aside width="201px" min-height='100vh'>
+        <el-aside style="width:'201px' min-height:'100vh'">
           <!-- 使用layout-aside组件 -->
           <layout-aside></layout-aside>
         </el-aside>

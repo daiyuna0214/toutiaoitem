@@ -3,6 +3,7 @@
 import axios from 'axios'
 import router from '../router'
 import { Message } from 'element-ui'
+import jsonBigInt from 'json-bigint'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 // 请求拦截器
 axios.interceptors.request.use(function (config) {
@@ -15,6 +16,10 @@ axios.interceptors.request.use(function (config) {
 }, function () {
   // 请求失败
 })
+// 在后台数据到达响应拦截之前，设置一个特殊的函数用来处理数据.保证数字的准确性
+axios.defaults.transformResponse = [function (data) {
+  return jsonBigInt.parse(data)
+}]
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
   // 响应拦截，把所有返回的数据进行解构
@@ -48,5 +53,7 @@ axios.interceptors.response.use(function (response) {
       break
   };
   Message({ type: 'warning', message })
+  // 让错误拦截器的内容继续进入到以后的catch中 而不进入then
+  return Promise.reject(error)
 })
 export default axios
