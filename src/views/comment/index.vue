@@ -23,6 +23,17 @@
                </template>
            </el-table-column>
            </el-table>
+           <el-row type="flex" justify="center" align="middle" style="height:8ss0px">
+             <el-pagination
+               background
+               layout="prev, pager, next"
+               :total="page.total"
+               :page-size="page.pageSize"
+               :current-page="page.currentPage"
+               @current-change='changePage'>
+               <!-- 当前页码改变时触发current-change事件 -->
+             </el-pagination>
+           </el-row>
       </el-card>
   </div>
 </template>
@@ -31,7 +42,12 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      page: {
+        currentPage: 1, // 定义默认当前页
+        total: 0, // 定义总页数默认值
+        pageSize: 10// 定义每页默认显示数据的条数
+      }
     }
   },
   methods: {
@@ -39,11 +55,12 @@ export default {
       // axios默认是get请求
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' }
+        params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
       }).then(res => {
         // console.log(res)
         // 把获取到的信息赋值给list
         this.list = res.data.results
+        this.page.total = res.data.total_count// 获取文章总条数
       })
     },
     // 定义一个布尔值转化的方法
@@ -79,6 +96,13 @@ export default {
         // 重新渲染页面
         this.getMessage()
       })
+    },
+    // 点击不同的页码，切换不同的内容
+    changePage (newPage) {
+      // 修改当前页码
+      this.page.currentPage = newPage
+      // 重新渲染页面
+      this.getMessage()
     }
   },
   //   页面渲染完成获取评论
