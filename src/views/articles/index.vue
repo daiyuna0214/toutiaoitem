@@ -6,7 +6,7 @@
       <el-row class="selectTool">
           <el-col :span=2>文章状态</el-col>
           <el-col :span=12>
-                <el-radio-group v-model="formData.status">
+                <el-radio-group v-model="formData.status" @change="changeCondition">
                     <!-- 文章状态，0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除，不传为全部 -->
                     <el-radio :label="5">全部</el-radio>
                     <!-- 全部的5是默认的，在传参的时候判断一下是不是5，如果是5 就传个null -->
@@ -20,7 +20,7 @@
       <el-row class="selectTool">
           <el-col :span=2>频道列表</el-col>
           <el-col :span=6>
-            <el-select v-model="formData.channel_id" placeholder="请选择">
+            <el-select v-model="formData.channel_id" placeholder="请选择" @change="changeCondition">
                <el-option
                  v-for="item in channels"
                  :key="item.id"
@@ -34,7 +34,8 @@
           <el-col :span=2>时间选择</el-col>
           <el-col :span=10>
                 <div class="block">
-                  <el-date-picker
+                  <el-date-picker @change="changeCondition"
+                  value-format="yyyy-MM-dd"
                     v-model="formData.timeValue"
                     type="daterange"
                     range-separator="-"
@@ -45,7 +46,7 @@
           </el-col>
       </el-row>
       <el-row class="total">
-          共找到62290条符合条件的内容
+          共找到{{page.total}}条符合条件的内容
       </el-row>
       <el-row class="article-item" type="flex" justify="space-between" v-for="item in list" :key="item.id.toString()">
           <el-col :span=14>
@@ -63,6 +64,16 @@
               <i class="el-icon-delete del">删除</i>
           </el-col>
       </el-row>
+      <el-row type="flex" justify="center" align="middle" style="height:80px">
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="page.total"
+            :current-page="page.currentPage"
+            :page-size="page.pageSize"
+            @current-change="changePage">
+          </el-pagination>
+      </el-row>
   </el-card>
 </template>
 
@@ -73,15 +84,21 @@ export default {
       formData: {
         status: 5, // 默认选择全部
         channel_id: null, // 频道列表默认是空
-        timeValue: []
+        timeValue: []// 起止时间默认是一个空数组
       },
       channels: [], // 定义一个数组接收频道
       list: [],
-      defaultImg: require('../../assets/img/404.png')
+      defaultImg: require('../../assets/img/404.png'),
+      page: {
+        currentPage: 1,
+        pageSize: 10,
+        total: 1
+      }
     }
   },
   filters: {
     filterStatus (value) {
+    //   文章状态，0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除，不传为全部
       switch (value) {
         case 0:
           return '草稿'
@@ -116,18 +133,41 @@ export default {
         this.channels = res.data.channels
       })
     },
-    getArticles () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params
       }).then(res => {
         console.log(res)
         this.list = res.data.results
+        this.page.total = res.data.total_count
       })
+    },
+    changeCondition () {
+      // 条件改变把当前页改为第一页
+      this.page.currentPage = 1
+      this.getCondition()
+    },
+    // 改变页码事件
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getCondition()
+    },
+    getCondition () {
+      let params = {
+        page: this.page.currentPage,
+        per_page: this.page.pageSize,
+        status: this.formData.status === 5 ? null : this.formData.status, // 不传为全部 5代表全部
+        channel_id: this.formData.channel_id, // 频道
+        begin_pubdate: this.formData.timeValue.length ? this.formData.timeValue[0] : null, // 起始时间
+        end_pubdate: this.formData.timeValue.length > 1 ? this.formData.timeValue[1] : null // 截止时间
+      }
+      this.getArticles(params)
     }
   },
   created () {
     this.getChannels()
-    this.getArticles()
+    this.getArticles({ page: 1, per_page: 10 })
   }
 }
 </script>
