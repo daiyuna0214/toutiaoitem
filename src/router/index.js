@@ -25,6 +25,9 @@ const routes = [{
   }, {
     path: '/home/material', // 评论列表做按需加载
     component: () => import('../views/material')
+  }, {
+    path: '/home/articles', // 评论列表做按需加载
+    component: () => import('../views/articles')
   }]
 }
   // {
