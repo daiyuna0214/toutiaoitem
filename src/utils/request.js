@@ -18,7 +18,7 @@ axios.interceptors.request.use(function (config) {
 })
 // 在后台数据到达响应拦截之前，设置一个特殊的函数用来处理数据.保证数字的准确性
 axios.defaults.transformResponse = [function (data) {
-  return jsonBigInt.parse(data)
+  return data ? jsonBigInt.parse(data) : {}// data有可能是个空字符串，直接处理一下下，保证这里不会报错
 }]
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
@@ -48,6 +48,9 @@ axios.interceptors.response.use(function (response) {
       break
     case 404:
       message = '手机号不正确'
+      break
+    case 204:
+      message = '删除成功'
       break
     default:
       break

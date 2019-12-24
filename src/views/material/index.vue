@@ -14,8 +14,8 @@
               <el-card v-for="item in list" :key='item.id' class="img-card">
                   <img :src="item.url" alt="">
                   <el-row class="icon" type="flex" justify="space-around" align="middle">
-                      <i class="el-icon-star-on"></i>
-                      <i class="el-icon-delete-solid"></i>
+                      <i class="el-icon-star-on" :style="{color:item.is_collected?'red':''}" @click="collectOrCancle(item)"></i>
+                      <i @click="delMaterial(item.id)" class="el-icon-delete-solid"></i>
                   </el-row>
               </el-card>
           </div>
@@ -110,6 +110,32 @@ export default {
         this.loading = false
         this.getAllMaterial()
       })
+    },
+    // 收藏或取消收藏图片
+    collectOrCancle (item) {
+      // 调用接口，发送请求
+      this.$axios({
+        url: `user/images/${item.id}`,
+        method: 'put',
+        data: { collect: !item.is_collected }
+      }).then(res => {
+        // console.log(res)
+        // 收藏成功重新渲染页面
+        this.getAllMaterial()
+      })
+    },
+    delMaterial (id) {
+      this.$confirm('您确定要删除该素材吗').then(() => {
+        // 只有点击了确定 才会执行
+        // 调用删除接口
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        }).then(() => {
+          // 重新拉取
+          this.getAllMaterial() // 重新加载数据
+        })
+      })
     }
   },
   created () {
@@ -139,6 +165,9 @@ export default {
             bottom: 0;
             left: 0;
             background-color: #f4f5f6;
+            i{
+              cursor: pointer;
+            }
         }
     }
 }
