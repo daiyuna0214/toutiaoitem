@@ -1,9 +1,14 @@
 <template>
-  <el-card>
-      <bread-crumb slot="header"  @tab-click="handleClick">
+  <el-card v-loading='loading'>
+      <bread-crumb slot="header">
       <template slot="title">素材管理</template>
       </bread-crumb>
-      <el-tabs v-model="activeName">
+      <el-row type="flex" justify="end">
+         <el-upload :http-request='uploadImg' :show-file-list="false" action="http://http://localhost:8080/home/material">
+            <el-button size="small" type="primary">点击上传</el-button>
+         </el-upload>
+      </el-row>
+      <el-tabs v-model="activeName"  @tab-click="handleClick">
       <el-tab-pane label="全部素材" name="all">
           <div class="img-list">
               <el-card v-for="item in list" :key='item.id' class="img-card">
@@ -14,6 +19,16 @@
                   </el-row>
               </el-card>
           </div>
+          <el-row type="flex" justify='center' align='middle' style="height:80px">
+              <el-pagination
+                background
+                layout="prev, pager, next"
+                :total="page.total"
+                :page-size='page.pageSize'
+                :current-page="page.currentPage"
+                @current-change='changePage'>
+              </el-pagination>
+          </el-row>
       </el-tab-pane>
       <el-tab-pane label="收藏素材" name="collect">
            <div class="img-list">
@@ -21,6 +36,16 @@
                   <img :src="item.url" alt="">
               </el-card>
           </div>
+          <el-row type="flex" justify='center' align='middle' style="height:80px">
+              <el-pagination
+                background
+                layout="prev, pager, next"
+                :total="page.total"
+                :page-size='page.pageSize'
+                :current-page="page.currentPage"
+                @current-change='changePage'>
+              </el-pagination>
+          </el-row>
       </el-tab-pane>
       </el-tabs>
   </el-card>
@@ -31,23 +56,60 @@ export default {
   data () {
     return {
       activeName: 'all', // 默认选中全部素材
-      list: []// 定义一个空数组，用来接收传出来的所有数据
+      page: {
+        total: 0,
+        pageSize: 8,
+        currentPage: 1
+      },
+      list: [], // 定义一个空数组，用来接收传出来的所有数据
+      loading: false
     }
   },
   methods: {
+    // 获取素材
     getAllMaterial () {
       // 调用接口，获取数据
       this.$axios({
         url: '/user/images',
-        params: { collect: this.activeName === 'collect' }
+        params: { collect: this.activeName === 'collect',
+          page: this.page.currentPage,
+          per_page: this.page.pageSize }
       }).then((res) => {
         // console.log(res)
         this.list = res.data.results
+        this.page.total = res.data.total_count
       })
     },
+    // tab切换
     handleClick () {
+      // tab切换时应该把当前页码回到第一页，如果不重置，就会找不到对应的页码
+      this.page.currentPage = 1
       // tab切换时，重新渲染页面
       this.getAllMaterial()
+    },
+    // 切换分页
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getAllMaterial()// 重新渲染页面
+    },
+    // 上传图片
+    uploadImg (params) {
+      // 上传没成功之前加载进度条
+      this.loading = true
+      let fd = new FormData()
+      fd.append('image', params.file)
+      // 发请求，调接口
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data: fd
+      }).then((res) => {
+        // console.log(res)
+        // 重新渲染页面
+        // 上传成功取消进度条
+        this.loading = false
+        this.getAllMaterial()
+      })
     }
   },
   created () {
