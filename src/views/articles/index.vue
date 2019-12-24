@@ -44,6 +44,25 @@
                 </div>
           </el-col>
       </el-row>
+      <el-row class="total">
+          共找到62290条符合条件的内容
+      </el-row>
+      <el-row class="article-item" type="flex" justify="space-between" v-for="item in 100" :key=item>
+          <el-col :span=14>
+              <el-row type="flex">
+                      <img src="../../assets/img/404.png" alt="">
+                  <div class="info">
+                      <span class="info-item">大千世界无奇不有</span>
+                      <el-tag class="tag">标签一</el-tag>
+                      <span class="data">2019-12-24 17:23:08</span>
+                  </div>
+              </el-row>
+          </el-col>
+          <el-col :span=4 class="icon">
+              <i class="el-icon-edit">修改</i>
+              <i class="el-icon-delete del">删除</i>
+          </el-col>
+      </el-row>
   </el-card>
 </template>
 
@@ -81,6 +100,43 @@ export default {
     .selectTool{
         height: 60px;
         padding-left: 20px;
+    }
+    .total{
+        margin: 30px 0;
+        height: 60px;
+        border-bottom: 1px dashed #ccc;
+    }
+    .article-item{
+        margin: 20px 0;
+        border-bottom: 1px solid #999;
+        padding: 10px 0;
+        .info{
+            margin-left: 20px;
+            height: 100px;
+            display: flex;
+            flex-direction:column;
+            justify-content: space-between;
+            .info-item{
+                font-size: 14px;
+            }
+            .tag{
+                width: 60px;
+            }
+            .data{
+                font-size: 12px;
+                color: #999;
+            }
+        }
+        img{
+            width: 180px;height: 100px;
+            border-radius: 5px;
+        }
+        .icon{
+            font-size: 12px;
+            .del{
+                margin-left: 8px
+            }
+        }
     }
 }
 </style>
