@@ -50,11 +50,10 @@
       <el-row class="article-item" type="flex" justify="space-between" v-for="item in list" :key="item.id.toString()">
           <el-col :span=14>
               <el-row type="flex">
-                       <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt="">
+                      <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt="">
                   <div class="info">
                       <span class="info-item">{{item.title}}</span>
-                      <!-- 过滤器不仅可以在插值表达式里面使用，也可以在v-bind里面使用 -->
-                      <el-tag class="tag" :type="item.status|filterType">{{item.status|filterStatus}}</el-tag>
+                      <el-tag class="tag" :type="item.status | filterType">{{item.status | filterStatus}}</el-tag>
                       <span class="data">{{item.pubdate}}</span>
                   </div>
               </el-row>
@@ -77,14 +76,12 @@ export default {
         timeValue: []
       },
       channels: [], // 定义一个数组接收频道
-      list: [], // 定义一个list接收文章评论内容
+      list: [],
       defaultImg: require('../../assets/img/404.png')
     }
   },
   filters: {
-    //   显示状态
     filterStatus (value) {
-    //    文章状态，0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除，不传为全部
       switch (value) {
         case 0:
           return '草稿'
@@ -94,25 +91,18 @@ export default {
           return '已发表'
         case 3:
           return '审核失败'
-        default:
-          break
       }
     },
-    //   文章状态
     filterType (value) {
-      // value是过滤器前面表达式计算的值
-    //    文章状态，0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除，不传为全部
       switch (value) {
-        case 0:
+        case 0 :
           return 'warning'
-        case 1:
+        case 1 :
           return 'info'
-        case 2:
+        case 2 :
           return ''
-        case 3:
+        case 3 :
           return 'danger'
-        default:
-          break
       }
     }
   },
@@ -123,11 +113,10 @@ export default {
         url: '/channels'
       }).then(res => {
         // console.log(res)
-        this.list = res.data.channels
+        this.channels = res.data.channels
       })
     },
     getArticles () {
-      // 调用接口发请求
       this.$axios({
         url: '/articles'
       }).then(res => {
@@ -182,7 +171,7 @@ export default {
         .icon{
             font-size: 12px;
             .del{
-                margin-left: 8px
+                margin-left: 8p
             }
         }
     }
