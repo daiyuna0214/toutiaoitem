@@ -28,6 +28,9 @@ const routes = [{
   }, {
     path: '/home/articles', // 评论列表做按需加载
     component: () => import('../views/articles')
+  }, {
+    path: '/home/publish', // 评论列表做按需加载
+    component: () => import('../views/publish')
   }]
 }
   // {

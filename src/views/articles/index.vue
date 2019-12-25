@@ -124,6 +124,23 @@ export default {
     }
   },
   methods: {
+    // 删除文章
+    // delArticle (id) {
+    //   // 所有已发布的文章是不可以删除的  只有草稿才可以删除
+    //   this.$confirm('您是否要删除这个文章?').then(() => {
+    //     // 直接删除
+    //     this.$axios({
+    //       method: 'delete',
+    //       url: `/articles/${id.toString()}`
+    //     }).then(() => {
+    //       this.$message({
+    //         type: 'success',
+    //         message: '删除文章成功!'
+    //       })
+    //       this.getCondition() // 重新调用
+    //     })
+    //   })
+    // },
     // 获取文章频道
     getChannels () {
       this.$axios({
@@ -153,6 +170,7 @@ export default {
       this.page.currentPage = newPage
       this.getCondition()
     },
+    // 获取条件改变
     getCondition () {
       let params = {
         page: this.page.currentPage,
@@ -211,7 +229,8 @@ export default {
         .icon{
             font-size: 12px;
             .del{
-                margin-left: 8p
+                margin-left: 8px;
+                cursor: pointer;
             }
         }
     }
