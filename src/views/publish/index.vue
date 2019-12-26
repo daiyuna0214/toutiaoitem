@@ -24,8 +24,8 @@
                </el-select>
           </el-form-item>
           <el-form-item>
-               <el-button type="primary" @click="publishArticles">发布</el-button>
-               <el-button @click="publishArticles">存入草稿</el-button>
+               <el-button type="primary" @click="publishArticles()">发布</el-button>
+               <el-button @click="publishArticles(true)">存入草稿</el-button>
           </el-form-item>
       </el-form>
   </el-card>
@@ -41,8 +41,8 @@ export default {
         title: '', // 文章标题
         content: '', // 文章内容
         cover: {// 封面
-          type: '',
-          inages: ''
+          type: 0, // 封面类型 -1:自动，0-无图，1-1张，3-3张
+          images: []
         },
         channel_id: null// 频道
       },
@@ -66,12 +66,20 @@ export default {
       })
     },
     // 发布文章
-    publishArticles () {
+    publishArticles (draft) {
       // 自动校验
-      this.$refs.publishForm.validate(function (value) {
+      this.$refs.publishForm.validate(value => {
         if (value) {
           alert('校验成功')
-        //   调接口发请求
+          //   调接口发请求
+          this.$axios({
+            url: '/articles',
+            params: { draft }, // query参数
+            data: this.formData, // body参数
+            method: 'post'
+          }).then(() => {
+            this.$router.push('/home/articles')
+          })
         }
       })
     }
