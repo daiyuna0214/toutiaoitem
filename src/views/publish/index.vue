@@ -94,21 +94,62 @@ export default {
       this.$refs.publishForm.validate(value => {
         if (value) {
           alert('校验成功')
-          //   调接口发请求
+          let { articleId } = this.$route.params// 获取动态路由参数articleId
+          // 判断是修改的发布还是原本的发布
+          // 简写
           this.$axios({
-            url: '/articles',
+            method: articleId ? 'put' : 'post',
+            url: articleId ? `/articles/${articleId}` : `/articles`,
             params: { draft }, // query参数
-            data: this.formData, // body参数
-            method: 'post'
+            data: this.formData // body参数
           }).then(() => {
+            // 修改成功去内容列表页面
             this.$router.push('/home/articles')
           })
+
+          // 复杂写
+          // if (articleId) {
+          //   // 如果有articleId代表是修改的发布
+          //   // 调用修改文章接口
+          //   this.$axios({
+          //     url: `/articles/${articleId}`,
+          //     method: 'put',
+          //     params: { draft }, // query参数
+          //     data: this.formData // body参数
+          //   }).then(() => {
+          //     // 修改成功去内容列表页面
+          //     this.$router.push('/home/articles')
+          //   })
+          // } else {
+          //   // 如果没有articleId代表是原本的发布
+          //   // 调用发布文章接口
+          //   this.$axios({
+          //     url: '/articles',
+          //     params: { draft }, // query参数
+          //     data: this.formData, // body参数
+          //     method: 'post'
+          //   }).then(() => {
+          //     // 发布成功去内容列表页面
+          //     this.$router.push('/home/articles')
+          //   })
+          // }
         }
+      })
+    },
+    // 通过id获取文章详情
+    getArticleById (articleId) {
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then(res => {
+        // console.log(res)
+        this.formData = res.data// 将指定id的文章数据赋值给formData
       })
     }
   },
   created () {
     this.getChannel()
+    let { articleId } = this.$route.params// 获取动态路由参数articleId
+    this.getArticleById(articleId)
   }
 }
 </script>
