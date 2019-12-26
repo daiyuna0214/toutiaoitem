@@ -23,13 +23,16 @@ const routes = [{
     path: '/home/comment', // 评论列表做按需加载
     component: () => import('../views/comment')
   }, {
-    path: '/home/material', // 评论列表做按需加载
+    path: '/home/material', //
     component: () => import('../views/material')
   }, {
-    path: '/home/articles', // 评论列表做按需加载
+    path: '/home/articles',
     component: () => import('../views/articles')
   }, {
-    path: '/home/publish', // 评论列表做按需加载
+    path: '/home/publish', // 此条规则只匹配发布文章
+    component: () => import('../views/publish')
+  }, {
+    path: '/home/publish/:articleId', // 定义动态路由参数，此条规则只匹配修文章
     component: () => import('../views/publish')
   }]
 }

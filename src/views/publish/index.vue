@@ -55,6 +55,29 @@ export default {
       }
     }
   },
+  watch: {
+    // 共用同一个组件
+    // 复用组件时，想对路由参数的变化作出响应的话，你可以简单地 watch (监测变化) $route 对象：
+    $route: function (to, from) {
+      // console.log(to)
+      // Object.keys(对象)，可以吧对象里面的属性以数组的形式表现出来
+      if (Object.keys(to.params).length) {
+        // 有参数去修改页面
+      } else {
+        // 没有参数去发布页面
+        // 所以此时需要把表单里面的内容恢复到原来的状态
+        this.formData = {
+          title: '', // 文章标题
+          content: '', // 文章内容
+          cover: {// 封面
+            type: 0, // 封面类型 -1:自动，0-无图，1-1张，3-3张
+            images: []
+          },
+          channel_id: null// 频道
+        }
+      }
+    }
+  },
   methods: {
     // 获取文章频道
     getChannel () {

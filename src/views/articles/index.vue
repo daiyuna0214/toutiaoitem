@@ -60,8 +60,8 @@
               </el-row>
           </el-col>
           <el-col :span=4 class="icon">
-              <i class="el-icon-edit">修改</i>
-              <i class="el-icon-delete del">删除</i>
+              <i class="el-icon-edit" @click="toModify(item.id)" style="cursor: pointer;">修改</i>
+              <i class="el-icon-delete del" @click="delArticle(item.id)">删除</i>
           </el-col>
       </el-row>
       <el-row type="flex" justify="center" align="middle" style="height:80px">
@@ -124,23 +124,28 @@ export default {
     }
   },
   methods: {
+    // 修改文章
+    toModify (id) {
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
     // 删除文章
-    // delArticle (id) {
-    //   // 所有已发布的文章是不可以删除的  只有草稿才可以删除
-    //   this.$confirm('您是否要删除这个文章?').then(() => {
-    //     // 直接删除
-    //     this.$axios({
-    //       method: 'delete',
-    //       url: `/articles/${id.toString()}`
-    //     }).then(() => {
-    //       this.$message({
-    //         type: 'success',
-    //         message: '删除文章成功!'
-    //       })
-    //       this.getCondition() // 重新调用
-    //     })
-    //   })
-    // },
+    delArticle (id) {
+      // 所有已发布的文章是不可以删除的  只有草稿才可以删除
+      this.$confirm('您是否要删除这个文章?').then(() => {
+        // 直接删除
+        alert(id.toString())
+        this.$axios({
+          method: 'delete',
+          url: `/articles/${id}`
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除文章成功!'
+          })
+          this.getCondition() // 重新调用
+        })
+      })
+    },
     // 获取文章频道
     getChannels () {
       this.$axios({
@@ -155,7 +160,7 @@ export default {
         url: '/articles',
         params
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         this.list = res.data.results
         this.page.total = res.data.total_count
       })
