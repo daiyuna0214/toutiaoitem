@@ -34,6 +34,9 @@ const routes = [{
   }, {
     path: '/home/publish/:articleId', // 定义动态路由参数，此条规则只匹配修文章
     component: () => import('../views/publish')
+  }, {
+    path: '/home/account', // 账户信息
+    component: () => import('../views/account')
   }]
 }
   // {
