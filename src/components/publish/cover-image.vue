@@ -2,14 +2,15 @@
   <div class="cover-image">
       <!-- 根据封面images的长度进行渲染，一个或者三个 -->
       <div class="cover-item" v-for="(item,index) in list" :key="index">
-          <img src="../../assets/img/pic_bg.png" alt="">
+          <img :src="item?item:defaultImg" alt="">
       </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['list']// 在子组件中使用props接收属性
+  props: ['list'], // 在子组件中使用props接收属性
+  defaultImg: require('../../assets/img/pic_bg.png')
 }
 </script>
 

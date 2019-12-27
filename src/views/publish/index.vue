@@ -11,7 +11,7 @@
               <quill-editor style="height:500px" v-model="formData.content"></quill-editor >
           </el-form-item>
           <el-form-item prop="type" label="封面" style="margin-top:150px">
-               <el-radio-group v-model="formData.cover.type">
+               <el-radio-group v-model="formData.cover.type" @change="changeType">
                  <el-radio :label="1">单图</el-radio>
                  <el-radio :label="3">三图</el-radio>
                  <el-radio :label="0">无图</el-radio>
@@ -80,16 +80,17 @@ export default {
           channel_id: null// 频道
         }
       }
-    },
-    'formData.cover.type': function () {
-      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
-        this.formData.cover.images = []// 无图或自动模式
-      } else if (this.formData.cover.type === 1) {
-        this.formData.cover.images = ['']// 单图模式
-      } else if (this.formData.cover.type === 3) {
-        this.formData.cover.images = ['', '', '']// 三图模式
-      }
     }
+    // 'formData.cover.type': function () {
+    //   if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+    //     this.formData.cover.images = []// 无图或自动模式
+    //   } else if (this.formData.cover.type === 1) {
+    //     this.formData.cover.images = ['']// 单图模式
+    //   } else if (this.formData.cover.type === 3) {
+    //     this.formData.cover.images = ['', '', '']// 三图模式
+    //   }
+    // }// 代码问题，只要type发生变化就会触发以上代码，
+    // 一旦触发imahes就会变为空字符串，改用change事件
   },
   methods: {
     // 获取文章频道
@@ -157,6 +158,16 @@ export default {
         // console.log(res)
         this.formData = res.data// 将指定id的文章数据赋值给formData
       })
+    },
+    // 该方法只有点击时才会触发
+    changeType () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        this.formData.cover.images = []// 无图或自动模式
+      } else if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']// 单图模式
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']// 三图模式
+      }
     }
   },
   created () {
