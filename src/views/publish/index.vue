@@ -19,7 +19,7 @@
                </el-radio-group>
           </el-form-item>
           <!-- 放置封面组件  需要用到父组件给子组件传值 使用props  给谁传值就在谁的标签上定义属性-->
-          <cover-image :list="formData.cover.images"></cover-image>
+          <cover-image :list="formData.cover.images" @selectOneImg='receiveImg'></cover-image>
           <el-form-item label="频道" prop="channel_id">
                <el-select v-model="formData.channel_id">
                   <el-option v-for="item in channels" :key="item.id" :value="item.id" :label="item.name"></el-option>
@@ -93,6 +93,19 @@ export default {
     // 一旦触发imahes就会变为空字符串，改用change事件
   },
   methods: {
+    // 再次接收从cover-image传递过来的图片地址
+    receiveImg (url, index) {
+      // alert(url + index)
+      // 更改图片的地址
+      // this.formData.cover.images[index] = url// 这种直接赋值的方法不可取，因为此时不是响应式其数据
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => {
+        if (i === index) {
+          return url
+        } else {
+          return item
+        }
+      })
+    },
     // 获取文章频道
     getChannel () {
       this.$axios({
