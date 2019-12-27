@@ -1,11 +1,11 @@
 <template>
-  <el-card>
+  <el-card v-model="loading">
       <bread-crumb slot="header">
          <template slot="title">账户信息</template>
       </bread-crumb>
       <el-form style="margin-left:30px" label-width="100px"
       ref='myForm' :model="formData" :rules="userRules">
-          <el-upload class='head-upload' action="" :show-file-list="false">
+          <el-upload class='head-upload' action="" :show-file-list="false" :http-request="uploadImg">
               <img :src="formData.photo?formData.photo:defaultImg" alt="">
           </el-upload>
           <el-form-item label="用户名" prop="name">
@@ -48,9 +48,9 @@ export default {
           {
             pattern: /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
             message: '邮箱格式不正确'
-          }],
-        mobile: ''
-      }
+          }]
+      },
+      loading: false
     }
   },
   methods: {
@@ -68,6 +68,7 @@ export default {
         if (value) {
           // 调接口发请求
           this.$axios({
+            //   编辑用户信息的接口
             url: '/user/profile',
             method: 'patch',
             data: this.formData
@@ -79,6 +80,21 @@ export default {
             })
           })
         }
+      })
+    },
+    uploadImg (params) {
+      this.loading = true
+      let fd = new FormData()
+      fd.append('photo', params.file)
+      // 发请求调接口
+      //   编辑用户头像
+      this.$axios({
+        url: '/user/photo',
+        method: 'patch',
+        data: fd
+      }).then((res) => {
+        this.formData.photo = res.data.photo// 更改头像
+        this.loading = false
       })
     }
   },
