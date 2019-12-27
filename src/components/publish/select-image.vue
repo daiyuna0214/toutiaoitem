@@ -19,7 +19,11 @@
             </el-row>
         </div>
     </el-tab-pane>
-    <el-tab-pane label="上传图片" name="uploadImg">上传图片</el-tab-pane>
+    <el-tab-pane label="上传图片" name="uploadImg">
+        <el-upload class="upload-img" action="" :http-request="uploadImg" :show-file-list="false">
+            <i class="el-icon-plus"></i>
+        </el-upload>
+    </el-tab-pane>
 
   </el-tabs>
 </template>
@@ -38,6 +42,20 @@ export default {
     }
   },
   methods: {
+    uploadImg (params) {
+      let fd = new FormData()
+      fd.append('image', params.file)
+      //   发请求调接口
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data: fd
+      }).then(res => {
+        console.log(res)
+        // 上传图片和点击素材是一个目的，所以直接和点击写一样即可
+        this.$emit('selectOneImg', res.data.url)
+      })
+    },
     //   点击图片触发的事件
     clickImg (url) {
       // 需要将url地址传出去 使用  $emit事件
@@ -53,7 +71,7 @@ export default {
           page: this.page.currentPage
         }
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         this.list = res.data.results
         this.page.total = res.data.total_count
       })
@@ -83,6 +101,15 @@ export default {
             width:100%;
             height: 100%;
         }
+    }
+}
+.upload-img{
+    display: flex;
+    justify-content: center;
+    i{
+        width: 50px;
+        height: 50px;
+        font-size: 50px
     }
 }
 </style>
