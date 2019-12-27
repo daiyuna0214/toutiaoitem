@@ -10,14 +10,16 @@
           <el-form-item label="内容" prop="content">
               <quill-editor style="height:500px" v-model="formData.content"></quill-editor >
           </el-form-item>
-          <el-form-item label="封面" style="margin-top:150px">
-               <el-radio-group>
-                 <el-radio :label="3">单图</el-radio>
-                 <el-radio :label="6">三图</el-radio>
-                 <el-radio :label="9">无图</el-radio>
-                 <el-radio :label="9">自动</el-radio>
+          <el-form-item prop="type" label="封面" style="margin-top:150px">
+               <el-radio-group v-model="formData.cover.type">
+                 <el-radio :label="1">单图</el-radio>
+                 <el-radio :label="3">三图</el-radio>
+                 <el-radio :label="0">无图</el-radio>
+                 <el-radio :label="-1">自动</el-radio>
                </el-radio-group>
           </el-form-item>
+          <!-- 放置封面组件  需要用到父组件给子组件传值 使用props  给谁传值就在谁的标签上定义属性-->
+          <cover-image :list="formData.cover.images"></cover-image>
           <el-form-item label="频道" prop="channel_id">
                <el-select v-model="formData.channel_id">
                   <el-option v-for="item in channels" :key="item.id" :value="item.id" :label="item.name"></el-option>
@@ -62,7 +64,9 @@ export default {
       // console.log(to)
       // Object.keys(对象)，可以吧对象里面的属性以数组的形式表现出来
       if (Object.keys(to.params).length) {
-        // 有参数去修改页面
+        // 有参数去修改
+        //  重新拉取数据
+        this.getArticleById(to.params.articleId)
       } else {
         // 没有参数去发布页面
         // 所以此时需要把表单里面的内容恢复到原来的状态
@@ -75,6 +79,15 @@ export default {
           },
           channel_id: null// 频道
         }
+      }
+    },
+    'formData.cover.type': function () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        this.formData.cover.images = []// 无图或自动模式
+      } else if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']// 单图模式
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']// 三图模式
       }
     }
   },

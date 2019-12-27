@@ -136,7 +136,7 @@ export default {
         alert(id.toString())
         this.$axios({
           method: 'delete',
-          url: `/articles/${id}`
+          url: `/articles/${id.toString()}`
         }).then(() => {
           this.$message({
             type: 'success',
