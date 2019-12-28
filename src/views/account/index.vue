@@ -28,6 +28,8 @@
 </template>
 
 <script>
+// 引入公共实例
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -78,6 +80,8 @@ export default {
               type: 'success',
               message: '保存成功'
             })
+            // 保存成功，告诉头部组件我更新了信息
+            eventBus.$emit('updataUserInfoSuccess')
           })
         }
       })
@@ -94,6 +98,8 @@ export default {
         data: fd
       }).then((res) => {
         this.formData.photo = res.data.photo// 更改头像
+        // 上传成功，告诉头部组件我更新了信息
+        eventBus.$emit('updataUserInfoSuccess')
         this.loading = false
       })
     }

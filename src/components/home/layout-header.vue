@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -37,12 +38,11 @@ export default {
   },
   // 页面创建完成，获取用户个人信息
   created () {
-    // axios默认请求方式为get
-    this.$axios({
-      url: '/user/profile'
-    }).then(res => {
-    //   console.log(res)
-      this.userInfo = res.data// 获取到用户的个人信息
+    this.getUserInfo()
+    // 页面创建完成，立刻监听账户信息中eventBus触发的自定义事件
+    eventBus.$on('updataUserInfoSuccess', () => {
+      // 告诉我已经更新，我需要重新获取信息
+      this.getUserInfo()
     })
   },
   methods: {
@@ -54,6 +54,16 @@ export default {
         // 退出到登录页
         this.$router.push('/login')
       }
+    },
+    // 获取个人信息
+    getUserInfo () {
+    // axios默认请求方式为get
+      this.$axios({
+        url: '/user/profile'
+      }).then(res => {
+        //   console.log(res)
+        this.userInfo = res.data// 获取到用户的个人信息
+      })
     }
   }
 }
