@@ -12,8 +12,10 @@ const routes = [{
 }, {
   path: '/login',
   component: Login
-},
-{
+}, {
+  path: '*', //* 是通配符，代表全局匹配
+  component: () => import('../views/404')// 按需配置404页面
+}, {
   path: '/home',
   component: Home,
   children: [{
