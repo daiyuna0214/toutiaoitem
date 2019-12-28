@@ -2,7 +2,7 @@
    <el-row type="flex" class="layout-header" justify="space-between" align="middle">
        <!-- 头部左侧 -->
      <el-col :span="6" class="left">
-         <i class="el-icon-s-fold" style="margin-right:5px"></i>
+         <i @click="collapseOrOpen" :class="{'el-icon-s-fold':collapse,'el-icon-s-unfold':!collapse}" style="margin-right:5px"></i>
          <span>江苏传智播客教育科技股份有限公司</span>
      </el-col>
      <!-- 头部右侧 -->
@@ -32,6 +32,7 @@ import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
+      collapse: false, // 定义是否折叠
       userInfo: {},
       defaultImg: require('../../assets/img/avatar.jpg')
     }
@@ -46,8 +47,14 @@ export default {
     })
   },
   methods: {
+    // 折叠或打开
+    collapseOrOpen () {
+      this.collapse = !this.collapse
+      // 告诉主页我折叠或打开了
+      eventBus.$emit('changeCollapse')
+    },
     handle (command) {
-      alert(command)
+      // alert(command)
       if (command === 'logout') {
         // 删除令牌
         window.localStorage.removeItem('user-token')
@@ -74,7 +81,10 @@ export default {
 .layout-header{
     height: 60px;
     .left{
-        font-size:16px
+        font-size:16px;
+        i{
+          font-size:25px
+        }
     }
     .right{
         img{
