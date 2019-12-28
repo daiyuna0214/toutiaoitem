@@ -61,24 +61,22 @@ export default {
   },
   methods: {
     // 自定义表单验证，当点击登录时进行验证
-    submitForm () {
+    async submitForm () {
       // 获取表单控件--通过$refs
-      this.$refs.myForm.validate((value) => {
-        if (value) {
-          // alert('验证通过')
-          // 调用接口
-          this.$axios({
-            url: '/authorizations', // 接口地址
-            method: 'post', // 请求类型
-            data: this.loginForm// 请求携带的参数
-          }).then(res => { // 登录成功进入then
-            // console.log(res)
-            window.localStorage.setItem('user-token', res.data.token)// 通过localStorage存储token令牌
-            // 登录成功跳转页面
-            this.$router.push('/home')// 通过代码进行页面跳转
-          })
-        }
-      })
+      let value = await this.$refs.myForm.validate()
+      if (value) {
+        // alert('验证通过')
+        // 调用接口
+        let res = await this.$axios({
+          url: '/authorizations', // 接口地址
+          method: 'post', // 请求类型
+          data: this.loginForm// 请求携带的参数
+        }) // 登录成功进入then
+        // console.log(res)
+        window.localStorage.setItem('user-token', res.data.token)// 通过localStorage存储token令牌
+        // 登录成功跳转页面
+        this.$router.push('/home')// 通过代码进行页面跳转
+      }
     }
   }
 }

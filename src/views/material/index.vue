@@ -67,18 +67,17 @@ export default {
   },
   methods: {
     // 获取素材
-    getAllMaterial () {
+    async getAllMaterial () {
       // 调用接口，获取数据
-      this.$axios({
+      let res = await this.$axios({
         url: '/user/images',
         params: { collect: this.activeName === 'collect',
           page: this.page.currentPage,
           per_page: this.page.pageSize }
-      }).then((res) => {
-        // console.log(res)
-        this.list = res.data.results
-        this.page.total = res.data.total_count
       })
+      // console.log(res)
+      this.list = res.data.results
+      this.page.total = res.data.total_count
     },
     // tab切换
     handleClick () {
@@ -93,49 +92,44 @@ export default {
       this.getAllMaterial()// 重新渲染页面
     },
     // 上传图片
-    uploadImg (params) {
+    async uploadImg (params) {
       // 上传没成功之前加载进度条
       this.loading = true
       let fd = new FormData()
       fd.append('image', params.file)
       // 发请求，调接口
-      this.$axios({
+      await this.$axios({
         url: '/user/images',
         method: 'post',
         data: fd
-      }).then((res) => {
-        // console.log(res)
-        // 重新渲染页面
-        // 上传成功取消进度条
-        this.loading = false
-        this.getAllMaterial()
       })
+      // console.log(res)
+      // 重新渲染页面
+      // 上传成功取消进度条
+      this.loading = false
+      this.getAllMaterial()
     },
     // 收藏或取消收藏图片
-    collectOrCancle (item) {
+    async collectOrCancle (item) {
       // 调用接口，发送请求
-      this.$axios({
+      await this.$axios({
         url: `user/images/${item.id}`,
         method: 'put',
         data: { collect: !item.is_collected }
-      }).then(res => {
-        // console.log(res)
-        // 收藏成功重新渲染页面
-        this.getAllMaterial()
       })
+      // console.log(res)
+      // 收藏成功重新渲染页面
+      this.getAllMaterial()
     },
-    delMaterial (id) {
-      this.$confirm('您确定要删除该素材吗').then(() => {
-        // 只有点击了确定 才会执行
-        // 调用删除接口
-        this.$axios({
-          url: `/user/images/${id}`,
-          method: 'delete'
-        }).then(() => {
-          // 重新拉取
-          this.getAllMaterial() // 重新加载数据
-        })
+    async delMaterial (id) {
+      await this.$confirm('您确定要删除该素材吗') // 只有点击了确定 才会执行
+      // 调用删除接口
+      await this.$axios({
+        url: `/user/images/${id}`,
+        method: 'delete'
       })
+      // 重新拉取
+      this.getAllMaterial() // 重新加载数据
     }
   },
   created () {

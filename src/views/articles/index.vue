@@ -129,41 +129,36 @@ export default {
       this.$router.push(`/home/publish/${id.toString()}`)
     },
     // 删除文章
-    delArticle (id) {
+    async delArticle (id) {
       // 所有已发布的文章是不可以删除的  只有草稿才可以删除
-      this.$confirm('您是否要删除这个文章?').then(() => {
-        // 直接删除
-        alert(id.toString())
-        this.$axios({
-          method: 'delete',
-          url: `/articles/${id.toString()}`
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除文章成功!'
-          })
-          this.getCondition() // 重新调用
-        })
+      await this.$confirm('您是否要删除这个文章?') // 直接删除
+      // alert(id.toString())
+      await this.$axios({
+        method: 'delete',
+        url: `/articles/${id.toString()}`
       })
+      this.$message({
+        type: 'success',
+        message: '删除文章成功!'
+      })
+      this.getCondition() // 重新调用
     },
     // 获取文章频道
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      let res = await this.$axios({
         url: '/channels'
-      }).then(res => {
-        // console.log(res)
-        this.channels = res.data.channels
       })
+      // console.log(res)
+      this.channels = res.data.channels
     },
-    getArticles (params) {
-      this.$axios({
+    async getArticles (params) {
+      let res = await this.$axios({
         url: '/articles',
         params
-      }).then(res => {
-        // console.log(res)
-        this.list = res.data.results
-        this.page.total = res.data.total_count
       })
+      // console.log(res)
+      this.list = res.data.results
+      this.page.total = res.data.total_count
     },
     changeCondition () {
       // 条件改变把当前页改为第一页

@@ -42,19 +42,18 @@ export default {
     }
   },
   methods: {
-    uploadImg (params) {
+    async uploadImg (params) {
       let fd = new FormData()
       fd.append('image', params.file)
       //   发请求调接口
-      this.$axios({
+      let res = await this.$axios({
         url: '/user/images',
         method: 'post',
         data: fd
-      }).then(res => {
-        console.log(res)
-        // 上传图片和点击素材是一个目的，所以直接和点击写一样即可
-        this.$emit('selectOneImg', res.data.url)
       })
+      console.log(res)
+      // 上传图片和点击素材是一个目的，所以直接和点击写一样即可
+      this.$emit('selectOneImg', res.data.url)
     },
     //   点击图片触发的事件
     clickImg (url) {
@@ -62,19 +61,18 @@ export default {
       this.$emit('selectOneImg', url)
     },
     // 获取所有素材
-    getMaterial () {
-      this.$axios({
+    async getMaterial () {
+      let res = await this.$axios({
         url: '/user/images',
         params: {
           collect: false,
           per_page: this.page.pageSize,
           page: this.page.currentPage
         }
-      }).then(res => {
-        // console.log(res)
-        this.list = res.data.results
-        this.page.total = res.data.total_count
       })
+      // console.log(res)
+      this.list = res.data.results
+      this.page.total = res.data.total_count
     },
     changePage (newPage) {
       this.page.currentPage = newPage

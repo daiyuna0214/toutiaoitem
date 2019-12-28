@@ -60,17 +60,19 @@ export default {
         window.localStorage.removeItem('user-token')
         // 退出到登录页
         this.$router.push('/login')
+      } else if (command === 'info') {
+        // 跳转到账户信息页面
+        this.$router.push('/home/account')
       }
     },
     // 获取个人信息
-    getUserInfo () {
+    async getUserInfo () {
     // axios默认请求方式为get
-      this.$axios({
+      let res = await this.$axios({
         url: '/user/profile'
-      }).then(res => {
-        //   console.log(res)
-        this.userInfo = res.data// 获取到用户的个人信息
       })
+      //   console.log(res)
+      this.userInfo = res.data// 获取到用户的个人信息
     }
   }
 }

@@ -57,51 +57,47 @@ export default {
   },
   methods: {
     // 获取用户个人信息
-    getUserMessage () {
-      this.$axios({
+    async getUserMessage () {
+      let res = await this.$axios({
         url: '/user/profile'
-      }).then(res => {
-        // console.log(res)
-        this.formData = res.data
       })
+      // console.log(res)
+      this.formData = res.data
     },
-    saveUserMessage () {
-      this.$refs.myForm.validate((value) => {
-        if (value) {
-          // 调接口发请求
-          this.$axios({
-            //   编辑用户信息的接口
-            url: '/user/profile',
-            method: 'patch',
-            data: this.formData
-          }).then(res => {
-            // 保存成功
-            this.$message({
-              type: 'success',
-              message: '保存成功'
-            })
-            // 保存成功，告诉头部组件我更新了信息
-            eventBus.$emit('updataUserInfoSuccess')
-          })
-        }
-      })
+    async saveUserMessage () {
+      let value = await this.$refs.myForm.validate()
+      if (value) {
+        // 调接口发请求
+        await this.$axios({
+          //   编辑用户信息的接口
+          url: '/user/profile',
+          method: 'patch',
+          data: this.formData
+        })
+        // 保存成功
+        this.$message({
+          type: 'success',
+          message: '保存成功'
+        })
+        // 保存成功，告诉头部组件我更新了信息
+        eventBus.$emit('updataUserInfoSuccess')
+      }
     },
-    uploadImg (params) {
+    async uploadImg (params) {
       this.loading = true
       let fd = new FormData()
       fd.append('photo', params.file)
       // 发请求调接口
       //   编辑用户头像
-      this.$axios({
+      let res = await this.$axios({
         url: '/user/photo',
         method: 'patch',
         data: fd
-      }).then((res) => {
-        this.formData.photo = res.data.photo// 更改头像
-        // 上传成功，告诉头部组件我更新了信息
-        eventBus.$emit('updataUserInfoSuccess')
-        this.loading = false
       })
+      this.formData.photo = res.data.photo// 更改头像
+      // 上传成功，告诉头部组件我更新了信息
+      eventBus.$emit('updataUserInfoSuccess')
+      this.loading = false
     }
   },
   created () {
